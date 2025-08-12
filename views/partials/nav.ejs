@@ -1,0 +1,41 @@
+<header class="bg-red-500 text-white p-4 shadow-lg">
+  <nav class="container mx-auto flex justify-between items-center">
+    <ul class="flex space-x-4">
+      <li><a href="/"
+          class="<%= currentPg === 'home' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">airbnb</a>
+      </li>
+      <%if(isLoggedIn) { %>
+        <li><a href="/homes"
+            class="<%= currentPg === 'Home List' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">Homes-List</a>
+        </li>
+        <li><a href="/favourites"
+            class="<%= currentPg === 'Favourites' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">Favourites</a>
+        </li>
+        <li><a href="/bookings"
+            class="<%= currentPg === 'Bookings' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">Bookings</a>
+        </li>
+        <li><a href="/host/host-home-list"
+            class="<%= currentPg === 'hostHomes' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">Host
+            Homes</a></li>
+        <li>
+          <a href="/host/add-home"
+            class="<%= currentPg === 'addHome' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">Add
+            Home
+          </a>
+        </li>
+        <%}%>
+          <li>
+            <% if(isLoggedIn){%>
+              <form action="/logout" method="POST">
+                <input type="submit" value="Logout"
+                  class="<%= currentPg === 'hostHomes' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">
+              </form>
+              <%} else{ %>
+                <a href="/login"
+                  class="<%= currentPg === 'hostHomes' ? 'bg-red-400' : 'hover:bg-red-400' %> py-2 px-4 rounded transition duration-300">Login
+                </a>
+                <%}%>
+          </li>
+    </ul>
+  </nav>
+</header>
