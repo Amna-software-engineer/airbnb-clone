@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 app.use(authRouter);
 app.use("/host", (req, res, next) => {
     req.isLoggedIn ?
-        req.userType === "host" ? next() : res.redirect("/")
+        req.user.userType == "host" ? next() : res.redirect("/")
         : res.redirect("/login");
 });
 app.use("/host", hostRouter);
