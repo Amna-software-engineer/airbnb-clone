@@ -1,62 +1,78 @@
-<%- include('../partials/head') %>
+<%- include('../partials/head')%>
 <body class="bg-gray-50">
-    <%- include('../partials/nav') %>
+  <%- include('../partials/nav')%>
+  
+  <main class="container mx-auto px-4 py-8 max-w-7xl">
+    <!-- Header Section -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-red-600 mb-2"><%= home.houseName %></h1>
+      <p class="text-gray-600">Property details and information</p>
+    </div>
 
-    <main class="container mx-auto px-4 py-10 max-w-7xl">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-red-600 mb-2">
-                <%= home.houseName %>
-            </h1>
-            <p class="text-gray-600">Complete details of this property</p>
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Image Section -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="relative">
+          <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>" 
+               class="w-full h-96 object-cover hover:scale-105 transition-transform duration-300">
+          <div class="absolute top-3 right-3">
+            <%- include('../partials/favourite', {home: home}) %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Section -->
+      <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
+        <!-- Description -->
+        <div class="border-b pb-4">
+          <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-home mr-2 text-red-500"></i>
+            Description
+          </h3>
+          <p class="text-gray-600 leading-relaxed"><%= home.description %></p>
         </div>
 
-        <!-- Main Content -->
-        <div class="bg-white rounded-xl shadow-md p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Image Section -->
-            <div class="relative overflow-hidden rounded-xl">
-                <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>"
-                    class="w-full h-96 object-cover hover:scale-105 transition-transform duration-300">
-                <div class="absolute top-3 right-3">
-                    <%- include('../partials/favourite', {home: home}) %>
-                </div>
-            </div>
-
-            <!-- Details Section -->
-            <div class="space-y-6">
-                <!-- Description -->
-                <div class="border-b pb-4">
-                    <h3 class="text-xl font-semibold mb-2">Description</h3>
-                    <p class="text-gray-600 leading-relaxed"><%= home.description %></p>
-                </div>
-
-                <!-- Location -->
-                <div class="border-b pb-4 flex items-center">
-                    <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>
-                    <p class="text-gray-600"><%= home.location %></p>
-                </div>
-
-                <!-- Price -->
-                <div class="border-b pb-4">
-                    <h3 class="text-xl font-semibold mb-2">Price</h3>
-                    <p class="text-red-600 text-2xl font-bold">₹<%= home.price %>
-                        <span class="text-gray-500 text-sm">per night</span>
-                    </p>
-                </div>
-
-                <!-- Rating -->
-                <div class="border-b pb-4 flex items-center">
-                    <i class="fas fa-star text-yellow-400 mr-1"></i>
-                    <span class="text-lg font-medium text-gray-700"><%= home.rating %> / 5</span>
-                </div>
-
-                <!-- Book Button -->
-                <button
-                    class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
-                    Book Now
-                </button>
-            </div>
+        <!-- Location -->
+        <div class="border-b pb-4">
+          <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-map-marker-alt mr-2 text-red-500"></i>
+            Location
+          </h3>
+          <p class="text-gray-600"><%= home.location %></p>
         </div>
-    </main>
+        
+        <!-- Price -->
+        <div class="border-b pb-4">
+          <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-rupee-sign mr-2 text-red-500"></i>
+            Price
+          </h3>
+          <p class="text-xl font-bold text-gray-800">₹<%= home.price %> <span class="text-sm text-gray-500 font-normal">per night</span></p>
+        </div>
+        
+        <!-- Rating -->
+        <div class="pb-4">
+          <h3 class="text-xl font-semibold text-gray-800 mb-3 flex items-center">
+            <i class="fas fa-star mr-2 text-yellow-400"></i>
+            Rating
+          </h3>
+          <div class="flex items-center">
+            <i class="fas fa-star text-yellow-400 mr-1"></i>
+            <span class="text-lg font-medium text-gray-800"><%= home.rating %></span>
+            <span class="text-gray-500 ml-1">/ 5</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to listings -->
+    <div class="text-center mt-8">
+      <a href="/homes" class="inline-flex items-center text-red-600 hover:text-red-700 font-medium transition-colors duration-200">
+        <i class="fas fa-arrow-left mr-2"></i>
+        Back to all homes
+      </a>
+    </div>
+  </main>
 </body>
 </html>

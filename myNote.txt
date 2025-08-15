@@ -1,0 +1,23 @@
+
+
+=========== populate ========
+
+in user model
+ favourites:[{
+        type: mongoose.Schema.Types.ObjectId,   //ye mongodb k ObjectId ka syntx hn
+        ref: "Home" //creating referce with home
+    }]
+ 
+ const userId=req.session.user._id;   
+ //populate m hm refrence wali fields ko dety hn or ye osk complete document(s) ko dy dyta //yha fvrt refrence hn to ye home m ja kr waha say jo id sim store hn onk complete doc ko otha kr fvrt m dal deta yani id ko actula doc say replace kr dega
+ User.findById(userId).populate("favourites").then(user=>{})
+
+
+  // Referenced documents ko full detail ke sath fetch karta hai. populate: Ek document ke andar reference ID (usually ObjectId) ko uske actual document data se replace kar dena.
+  // Favourite.find()
+  //   .populate("homeId")
+  //   .then((favourites) => {})
+
+
+
+  ==============================================================================

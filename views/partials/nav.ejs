@@ -9,39 +9,57 @@
       <!-- Desktop Navigation -->
       <ul class="hidden md:flex items-center space-x-1">
         <% if(isLoggedIn) { %>
-          <li> <a href="/homes"
-              class="<%= currentPg === 'Home List' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-              Homes </a> </li>
-          <li> <a href="/favourites"
-              class="<%= currentPg === 'Favourites' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-              Favourites </a> </li>
-          <li> <a href="/bookings"
-              class="<%= currentPg === 'Bookings' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-              Bookings </a> </li>
-          <li> <a href="/host/host-home-list"
-              class="<%= currentPg === 'hostHomes' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-              Host Homes </a> </li>
-          <li> <a href="/host/add-home"
-              class="<%= currentPg === 'addHome' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-              Add Home </a> </li>
-          <li>
-            <form action="/logout" method="POST" class="inline"> <button type="submit"
-                class="bg-red-700 hover:bg-red-800 px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
-                Logout </button> </form>
-          </li>
-          <% } else { %>
-            <li> <a href="/login"
-                class="<%= currentPg === 'login' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-                Login </a> </li>
-            <li> <a href="/signup"
-                class="<%= currentPg === 'signup' ? 'bg-red-700' : 'bg-red-700 hover:bg-red-800' %> px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
-                Sign Up </a> </li>
-            <% } %>
+
+          <% if(user && user.userType==="guest" ) { %>
+            <li> <a href="/homes"
+                class="<%= currentPg === 'Home List' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                Homes </a> </li>
+            <li> <a href="/favourites"
+                class="<%= currentPg === 'Favourites' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                Favourites </a> </li>
+            <li> <a href="/bookings"
+                class="<%= currentPg === 'Bookings' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                Bookings </a> </li>
+            <% } else{%>
+
+              <li> <a href="/host/host-home-list"
+                  class="<%= currentPg === 'hostHomes' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                  Host Homes </a> </li>
+              <li> <a href="/host/add-home"
+                  class="<%= currentPg === 'addHome' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                  Add Home </a> </li>
+              <% } %>
+                <li>
+                  <form action="/logout" method="POST" class="inline"> <button type="submit"
+                      class="bg-red-700 hover:bg-red-800 px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
+                      Logout </button> </form>
+                </li>
+                <li class="ms-4 text-white font-bold">
+                  <i class="fa-regular fa-circle-user" class="text-2xl "></i>
+                  <span>
+                    <%= user && user.firstName %>
+                  </span>
+                </li>
+                <% } else { %>
+                  <li> <a href="/login"
+                      class="<%= currentPg === 'login' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                      Login </a> </li>
+                  <li> <a href="/signup"
+                      class="<%= currentPg === 'signup' ? 'bg-red-700' : 'bg-red-700 hover:bg-red-800' %> px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
+                      Sign Up </a> </li>
+
+                  <% } %>
       </ul>
 
+
       <!-- Mobile Menu Button -->
-      <!-- Mobile Menu Button -->
-      <button class="md:hidden" onclick="toggleMenu()">
+      <div class="md:hidden text-white font-bold ms-auto">
+                  <i class="fa-regular fa-circle-user" class="text-2xl "></i>
+                  <span>
+                    <%= user && user.firstName %>
+                  </span>
+        </div>
+      <button class="md:hidden ms-4 " onclick="toggleMenu()">
         <i class="fas fa-bars text-xl"></i>
       </button>
     </div>
@@ -49,34 +67,40 @@
     <!-- Mobile Navigation -->
     <div id="mobileMenu" class="md:hidden hidden mt-4 space-y-2">
       <% if(isLoggedIn) { %>
-        <a href="/homes"
-          class="block <%= currentPg === 'Home List' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-          Homes </a>
-        <a href="/favourites"
-          class="block <%= currentPg === 'Favourites' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-          Favourites </a>
-        <a href="/bookings"
-          class="block <%= currentPg === 'Bookings' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-          Bookings </a>
-        <a href="/host/host-home-list"
-          class="block <%= currentPg === 'hostHomes' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-          Host Homes </a>
-        <a href="/host/add-home"
-          class="block <%= currentPg === 'addHome' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-          Add Home </a>
-        <form action="/logout" method="POST">
-          <button type="submit"
-            class="w-full text-left bg-red-700 hover:bg-red-800 px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
-            Logout </button>
-        </form>
-        <% } else { %>
-          <a href="/login"
-            class="block <%= currentPg === 'login' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
-            Login </a>
-          <a href="/signup"
-            class="block <%= currentPg === 'signup' ? 'bg-red-700' : 'bg-red-700 hover:bg-red-800' %> px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
-            Sign Up </a>
-          <% } %>
+        <% if(user && user.userType==="guest" ) { %>
+          <a href="/homes"
+            class="block <%= currentPg === 'Home List' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+            Homes </a>
+          <a href="/favourites"
+            class="block <%= currentPg === 'Favourites' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+            Favourites </a>
+          <a href="/bookings"
+            class="block <%= currentPg === 'Bookings' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+            Bookings </a>
+          <% } else{%>
+
+            <a href="/host/host-home-list"
+              class="block <%= currentPg === 'hostHomes' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+              Host Homes </a>
+            <a href="/host/add-home"
+              class="block <%= currentPg === 'addHome' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+              Add Home </a>
+            <% } %>
+
+              <form action="/logout" method="POST">
+                <button type="submit"
+                  class="w-full text-left bg-red-700 hover:bg-red-800 px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
+                  Logout </button>
+              </form>
+
+              <% } else { %>
+                <a href="/login"
+                  class="block <%= currentPg === 'login' ? 'bg-red-500' : 'hover:bg-red-500' %> px-4 py-2 rounded-lg transition duration-300 text-sm">
+                  Login </a>
+                <a href="/signup"
+                  class="block <%= currentPg === 'signup' ? 'bg-red-700' : 'bg-red-700 hover:bg-red-800' %> px-4 py-2 rounded-lg transition duration-300 text-sm font-medium">
+                  Sign Up </a>
+                <% } %>
     </div>
   </nav>
 </header>

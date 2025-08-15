@@ -1,14 +1,14 @@
-const Favourite = require("../model/favourite");
-const Home = require("../model/home")
+const Home = require("../model/home");
+const User = require("../model/user");
 
 
 exports.getIndex = (req, res, next) => {
-  Home.find().then(registeredHomes => { res.render('store/index', { registeredHomes: registeredHomes, pageTitle: "airbnb Home", currentPg: "home", isLoggedIn: req.isLoggedIn }) }
+  Home.find().then(registeredHomes => { res.render('store/index', { registeredHomes: registeredHomes, pageTitle: "airbnb Home", currentPg: "home", isLoggedIn: req.isLoggedIn, user: req.user }) }
   );
 }
 
 exports.getHomes = (req, res, next) => {
-  Home.find().then(registeredHomes => { res.render('store/homeList', { registeredHomes: registeredHomes, pageTitle: "Home List", currentPg: "Home List", isLoggedIn: req.isLoggedIn }) }
+  Home.find().then(registeredHomes => { res.render('store/homeList', { registeredHomes: registeredHomes, pageTitle: "Home List", currentPg: "Home List", isLoggedIn: req.isLoggedIn, user: req.user }) }
   );
 }
 
@@ -19,55 +19,66 @@ exports.getHome = (req, res, next) => {
     if (!home) {
       return res.redirect("/homes")
     }
-    res.render("store/homeDetails", { home: home, pageTitle: home.houseName, currentPg: "Homes", isLoggedIn: req.isLoggedIn });
+    res.render("store/homeDetails", { home: home, pageTitle: home.houseName, currentPg: "Homes", isLoggedIn: req.isLoggedIn, user: req.user });
   })
 
 }
 
 exports.getBookings = (req, res, next) => {
-  Home.find().then(registeredHomes => { res.render('store/bookings', { registeredHomes: registeredHomes, pageTitle: "My Bookings", currentPg: "Bookings", isLoggedIn: req.isLoggedIn }) }
+  Home.find().then(registeredHomes => { res.render('store/bookings', { registeredHomes: registeredHomes, pageTitle: "My Bookings", currentPg: "Bookings", isLoggedIn: req.isLoggedIn, user: req.user }) }
   );
 }
 
 exports.getFavourites = (req, res, next) => {
-  // Referenced documents ko full detail ke sath fetch karta hai. populate: Ek document ke andar reference ID (usually ObjectId) ko uske actual document data se replace kar dena.
-  Favourite.find()
-    .populate("homeId")
-    .then((favourites) => {
-      console.log("favourites....",favourites);
-      //getting only homeId from full obj as populate return complete obj
-      const favouriteHomes = favourites.map(fav => fav.homeId);
-      res.render('store/favouriteList', { favouriteHomes: favouriteHomes, pageTitle: "My Favourites", currentPg: "Favourites", isLoggedIn: req.isLoggedIn })
-    })
+
+  const userId = req.session.user._id;
+  //populate m hm ref wali filed ko dety hn or ye osk complete document(s) ko dy dyta //yha fvrt refrence hn to ye home m ja kr waha say jo id ism store hn onk complete document ko otha kr fvrt m dal deta yani id ko actula document say replace kr dega
+  User.findById(userId).populate("favourites").then(user => {
+    // console.log("favourites....", user);
+    res.render('store/favouriteList', { favouriteHomes: user.favourites, pageTitle: "My Favourites", currentPg: "Favourites", isLoggedIn: req.isLoggedIn, user: req.user })
+  })
 }
 
 exports.PostFavourites = (req, res, next) => {
   const homeId = req.body.homeId;
-  // console.log(homeId);
-  Favourite.findOne({ homeId: homeId }).then(existingFavourite => {
-    if (existingFavourite) {
-      console.log("Home already in favourites");
-      res.redirect("/favourites")
+  const userId = req.session.user._id;
 
+  User.findById(userId).then(user => {
+    console.log(homeId);
+
+    if (!user.favourites.includes(homeId)) {
+      console.log("user ", user.favourites);
+      user.favourites.push(homeId);
+      user.save()
+        .then(updatedUser => {
+          console.log("Home favourites successfully");
+        }).catch(err => {
+          console.log("Error while adding to favourites", err);
+        })
     } else {
-      const newFavourite = new Favourite({ homeId: homeId });
-      newFavourite.save().then(() => {
-        res.redirect("/favourites")
-      });
+      console.log("Home Already Marked as favourite ");
     }
+    res.redirect("/favourites")
   })
 }
 
 exports.DeleteFavourites = (req, res, next) => {
   const homeId = req.params.homeId;
-  Favourite.findOneAndDelete({ homeId: homeId })
-    .then(() => {
-      res.redirect("/favourites")
-    })
-    .catch(err => {
-      console.log("Error while deleting favourite: ", err);
-    });
+  const userId = req.session.user._id;
 
+  User.findById(userId).then(user => {
+
+    if (user.favourites.includes(homeId)) {
+      //homeid is string , //fav is objtype
+      user.favourites = user.favourites.filter(fav => fav != homeId)
+      user.save().then(updatedUser => {
+        console.log("Home removed from favourites successfully");
+      }).catch(err => {
+        console.log("Error while deleting favourite: ", err);
+      });
+      res.redirect("/favourites")
+    }
+  })
 }
 
 

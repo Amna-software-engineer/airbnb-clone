@@ -1,7 +1,8 @@
 
 const Home = require("../model/home")
+
 exports.AddHome = (req, res, next) => {  
-  res.render("host/editHome", { pageTitle: "Add Home to airbnb", currentPg: "addHome", editing: false,isLoggedIn: req.isLoggedIn })
+  res.render("host/editHome", { pageTitle: "Add Home to airbnb", currentPg: "addHome", editing: false,isLoggedIn: req.isLoggedIn,user: req.user })
 }
 
 exports.EditHome = (req, res, next) => {  
@@ -13,7 +14,7 @@ exports.EditHome = (req, res, next) => {
       console.log("Home not found for editing.");
       return res.redirect("/host/host-home-list");
     }
-    res.render("host/editHome", { pageTitle: "Edit Your Home", currentPg: "hostHomes", editing: editing, home: home,isLoggedIn: req.isLoggedIn })
+    res.render("host/editHome", { pageTitle: "Edit Your Home", currentPg: "hostHomes", editing: editing, home: home,isLoggedIn: req.isLoggedIn,user: req.user})
   })
 
 }
@@ -27,7 +28,7 @@ exports.PostEditHome = (req, res, next) => {
 
 exports.getHostHomes = (req, res, next) => {  
   Home.find().then(registeredHomes =>
-    res.render('host/hostHomeList', { registeredHomes: registeredHomes, pageTitle: "Host Homes List", currentPg: "hostHomes" ,isLoggedIn: req.isLoggedIn}))
+    res.render('host/hostHomeList', { registeredHomes: registeredHomes, pageTitle: "Host Homes List", currentPg: "hostHomes" ,isLoggedIn: req.isLoggedIn,user: req.user}))
 }
 
 
@@ -39,7 +40,7 @@ exports.PostAddHome = (req, res, next) => {
   newHome.save().then((homeAdded) => {
     console.log("Home added successfully", homeAdded);
   }).catch(err => {
-    console.log("Error adding home", err);
+    console.log("Error while adding home", err);
   })
   res.redirect("/host/host-home-list")
 

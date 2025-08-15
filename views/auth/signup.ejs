@@ -8,14 +8,21 @@
       <p class="text-center text-sm text-gray-500 mb-6">Create your account to get started</p>
 
       <form action="/signup" method="POST" class="space-y-5">
+        <% if(errorMsgs && errorMsgs.length > 0 ){ %>
+          <div class="bg-red-200 p-4 text-red-700">
+            <% errorMsgs.forEach(err => { %>
+             <li><%= err %></li>
+            <% }) %>
+          </div>
+          <% } %>
         <input type="text" name="firstName" placeholder="First Name"
-          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" required/>
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" value="<%= oldInputs ? oldInputs.firstName : '' %>" required/>
         
         <input type="text" name="lastName" placeholder="Last Name"
-          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" required/>
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" value="<%= oldInputs ? oldInputs.lastName : '' %>" required/>
         
         <input type="email" name="email" placeholder="Email Address"
-          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" required/>
+          class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" value="<%= oldInputs ? oldInputs.email : '' %>" required/>
         
         <input type="password" name="password" placeholder="Password"
           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" required/>
@@ -26,11 +33,12 @@
         <div class="flex items-center gap-4">
           <span class="text-sm font-medium">Choose Your Role:</span>
           <label class="flex items-center gap-1">
-            <input type="radio" name="userType" value="host" id="host" required />
+            <input type="radio" name="userType" value="host" id="host"
+             <%= oldInputs && oldInputs.userType === 'host' ? 'checked' : '' %>  />
             <span>Host</span>
           </label>
           <label class="flex items-center gap-1">
-            <input type="radio" name="userType" value="guest" id="guest" />
+            <input type="radio" name="userType"  value="guest"  id="guest" <%= oldInputs && oldInputs.userType === 'guest' ? 'checked' : '' %> />
             <span>Guest</span>
           </label>
         </div>

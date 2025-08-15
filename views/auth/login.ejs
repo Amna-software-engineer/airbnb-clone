@@ -10,6 +10,11 @@
 
       <!-- Form -->
       <form action="/login" method="POST" class="space-y-5">
+         <% if(errorMsgs  ){ %>
+          <div class="bg-red-200 p-4 text-red-700">
+             <li><%= errorMsgs %></li>
+          </div>
+          <% } %>
         <input type="email" name="email" placeholder="Email Address"
           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-red-400 transition" />
 

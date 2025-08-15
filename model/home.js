@@ -1,6 +1,5 @@
 
 const mongoose = require('mongoose');
-const Favourite = require('./favourite');
 
 const homeSchema = new mongoose.Schema({
     houseName: {
@@ -19,15 +18,15 @@ const homeSchema = new mongoose.Schema({
     description: String,
 })
 
-homeSchema.pre("findOneAndDelete",async function(next) {
-    const homeId = this.getQuery()._id;
-    console.log("Deleting home with ID: ", homeId);
+// homeSchema.pre("findOneAndDelete",async function(next) {
+//     const homeId = this.getQuery()._id;
+//     console.log("Deleting home with ID: ", homeId);
     
-   await Favourite.deleteMany({ homeId: homeId }).then(()=>{
-       console.log("Deleted favourites for homeId: ", homeId);
+//    await Favourite.deleteMany({ homeId: homeId }).then(()=>{
+//        console.log("Deleted favourites for homeId: ", homeId);
 
-   })
-    next();
-})
+//    })
+//     next();
+// })
 
 module.exports = mongoose.model('Home', homeSchema);
