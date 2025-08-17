@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const mongodbStore = require("connect-mongodb-session")(session);
 const dotenv = require("dotenv");
+const multer = require("multer")
 // local Module
 const hostRouter = require("./routes/hostRouter");
 const userRouter = require("./routes/userRouter");
@@ -17,8 +18,43 @@ const app = express();
 dotenv.config();
 const mongodbURL = process.env.MONGODB_URL;
 
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => { //cb(err,filepath) is callback 
+        // console.log(file);
+        if (file.mimetype == "application/pdf") {
+            cb(null, "./rules");
+        } else if (['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype)) {
+            cb(null, "./upload");
+        }
+    },
+    filename: (req, file, cb) => {
+        // console.log("file from filename",file);
+        // fn=file.originalname +req.body.id;
+        // cb(null,file.originalname)
+        cb(null, Date.now() + "-" + file.originalname)//for uniq img name i had removed here becaus i want if img have same name then don't add duplicate imgs
+    }
+})
+const fileFilter = (req, file, cb) => {
+    // console.log(file);
+    if (file.mimetype === "application/pdf") { //accept only pdf
+        cb(null, true)
+    } else if (['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype)) { //accept only png,jpg,jpeg file
+        cb(null, true)
+    } else {
+        cb(null, false)
+    }
+}
+
+const upload = multer({ storage, fileFilter })
+
 // make public foldr public
-app.use(express.static(path.join(rootDir, 'public')))
+app.use(express.static(path.join(rootDir, 'public'))) // express.static serve static files like imgs,css,js
+app.use(express.urlencoded({ extended: true })); //help parse form data
+app.use("/upload", express.static(path.join(rootDir, 'upload')))
+app.use("/host/upload", express.static(path.join(rootDir, 'upload')))
+app.use("/homes/upload", express.static(path.join(rootDir, 'upload')))
+
+
 // set engine as ejs
 app.set("view engine", "ejs")
 app.set("views", "views")
@@ -26,8 +62,7 @@ const store = new mongodbStore({
     uri: mongodbURL,
     collection: "sessions"
 })
-
-app.use(express.urlencoded({ extended: true }));
+//creating session
 app.use(session({
     secret: "my-secret",
     saveUninitialized: false,
@@ -43,7 +78,7 @@ app.use((req, res, next) => {
     next();
 })
 app.use(authRouter);
-app.use("/host", (req, res, next) => {
+app.use("/host", upload.fields([{ name: "photo", maxCount: 1 }, { name: "rules", maxCount: 1 }]), (req, res, next) => {
     req.isLoggedIn ?
         req.user.userType == "host" ? next() : res.redirect("/")
         : res.redirect("/login");

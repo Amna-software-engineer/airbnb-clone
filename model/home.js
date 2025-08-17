@@ -14,8 +14,9 @@ const homeSchema = new mongoose.Schema({
     rating: {
         type: Number, required: true
     },
-    photoUrl: String,
+    photo: String,
     description: String,
+    rules: String
 })
 
 // homeSchema.pre("findOneAndDelete",async function(next) {

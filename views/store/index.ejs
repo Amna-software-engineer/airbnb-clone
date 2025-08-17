@@ -17,7 +17,7 @@
               class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group">
               <!-- Image -->
               <div class="relative overflow-hidden">
-                <img src="<%= home.photoUrl %>" alt="<%= home.houseName %>"
+                <img src="<%= home.photo %>" alt="<%= home.houseName %>"
                   class="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300">
                 <div class="absolute top-3 right-3">
                    <%- include('../partials/favourite', {home: home}) %>
@@ -44,7 +44,7 @@
                     </span>
                   </div>
                   <div class="text-right">
-                    <p class="text-xl font-bold text-gray-800">₹<%= home.price %>
+                    <p class="text-xl font-bold text-gray-800">$<%= home.price %>
                     </p>
                     <p class="text-sm text-gray-500">per night</p>
                   </div>

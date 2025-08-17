@@ -9,5 +9,6 @@ userRouter.get('/bookings', storeController.getBookings);
 userRouter.get('/favourites', storeController.getFavourites);
 userRouter.post('/favourites', storeController.PostFavourites);
 userRouter.post('/favourites/delete/:homeId', storeController.DeleteFavourites);
+userRouter.get('/rules/:homeId', storeController.HouseRules);
 
 module.exports = userRouter;

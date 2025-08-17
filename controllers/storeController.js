@@ -1,5 +1,7 @@
 const Home = require("../model/home");
 const User = require("../model/user");
+const rootDir = require("../utils/path");
+const path = require("path");
 
 
 exports.getIndex = (req, res, next) => {
@@ -80,5 +82,19 @@ exports.DeleteFavourites = (req, res, next) => {
     }
   })
 }
+//it have two middlwares
+exports.HouseRules = [(req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    res.redirect("/login")
+  }
+  next();
+},
+(req, res, next) => {
+    const homeId = req.params.homeId;
+    res.download(path.join(rootDir, "rules", "house rules.pdf"), "Rules.pdf");
+
+}
+
+]
 
 

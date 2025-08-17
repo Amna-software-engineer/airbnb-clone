@@ -20,4 +20,29 @@ in user model
 
 
 
-  ==============================================================================
+  ===============================path concept=======================================
+  
+ //express.static ==> static files ko serve krta hai
+
+frontend m img ka path hmn diya hai "/upload/img.png" start m / ka mtlb root dir say dekho to  app.use( "/upload",express.static(path.join(rootDir, 'upload'))) yha hm n  kaha hai k jab bhi /upload say req ay to upload folr ko server karo user k cae m request  http://localhost:3005/upload say jaey gi http://localhost:3005 is root url
+
+host k case m root url hai http://localhost:3005/host but esy to hm n public nhi kiya hm n to sirf http://localhost:3005 isk liye public kiya hai to is lye  app.use( "/host/upload",express.static(path.join(rootDir, 'upload')))
+ yaha hmnay kha k agr / (mtlb root url) host/uplaods say jab req ay to uplaod ko serve krna host k cas m router m hmn root url k sath /host lagay hai is waja say root url http://localhost:3005/host ho giya ab img jab  http://localhost:3005/host/uplaod say req (q k root url /host hai)send krgi to koi uplaod foldr nhi hoga to img show nhi hogi islye hm n es url ko bhi public krdiya  
+
+==================multer=================
+upload.single("filename") // filename mentioned in form in frontend.u can access using req.file, req.body conaitn text fields
+upload.fields([{name:"filename",maxCount: "value"},{name:"filename",maxCount: "value"}]) // filename mentioned in form in frontend e.g
+upload.fields([{name:"photo",maxCount: 1},{name:"rules",maxCount: 1}])
+//to acces in frontend use
+req.files // output will be object(req.files) with two fields, photo and rules,each field have one array which conatin one object with filed like fieldname,originalname,encoding,mimetype,destination,filename,path,size
+ const photo = req.files && req.files.photo[0].path;  //
+
+
+
+
+ {
+  fieldname: 'photo',
+  originalname: 'house4.png',
+  encoding: '7bit',
+  mimetype: 'image/png'
+}
