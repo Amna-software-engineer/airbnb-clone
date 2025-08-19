@@ -37,6 +37,23 @@ upload.fields([{name:"photo",maxCount: 1},{name:"rules",maxCount: 1}])
 req.files // output will be object(req.files) with two fields, photo and rules,each field have one array which conatin one object with filed like fieldname,originalname,encoding,mimetype,destination,filename,path,size
  const photo = req.files && req.files.photo[0].path;  //
 
+=========================rest api===============
+REST API is an architectural style that defines how different systems (like frontend and backend, or mobile and server) communicate over the internet using standard HTTP methods.
+
+It uses resources (like /users, /products) and performs actions on them using methods like:
+
+GET → Read data
+POST → Create new data
+PUT → Update existing data
+DELETE → Remove data
+
+The URL stays the same, only the method changes. For example:
+POST /users → Create a new user
+GET /users → Get all users
+PUT /users/:id → Update a user
+DELETE /users/:id → Delete a user
+restapi or restful api is same(ik chiz k 2 nam)
+it is stateless
 
 
 

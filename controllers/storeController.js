@@ -1,4 +1,7 @@
+const bookings = require("../model/bookings");
+const home = require("../model/home");
 const Home = require("../model/home");
+const user = require("../model/user");
 const User = require("../model/user");
 const rootDir = require("../utils/path");
 const path = require("path");
@@ -26,10 +29,21 @@ exports.getHome = (req, res, next) => {
 
 }
 
-exports.getBookings = (req, res, next) => {
-  Home.find().then(registeredHomes => { res.render('store/bookings', { registeredHomes: registeredHomes, pageTitle: "My Bookings", currentPg: "Bookings", isLoggedIn: req.isLoggedIn, user: req.user }) }
-  );
-}
+exports.getBookings = [(req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    res.redirect("/login")
+  }
+  next();
+}, (req, res, next) => {
+  const home = req.params.homeId;
+  const userId = req.session.user._id;
+  bookings.find({ userId: userId }).populate("home").then(bookingDetails => {
+    console.log("bookingDetails", bookingDetails);
+    { res.render('store/bookings', { bookingDetails: bookingDetails, pageTitle: "My Bookings", currentPg: "Bookings", isLoggedIn: req.isLoggedIn, user: req.user }) }
+  }).catch(err => {
+    console.log("err while geting bookings ", err);
+  })
+}]
 
 exports.getFavourites = (req, res, next) => {
 
@@ -90,11 +104,48 @@ exports.HouseRules = [(req, res, next) => {
   next();
 },
 (req, res, next) => {
-    const homeId = req.params.homeId;
-    res.download(path.join(rootDir, "rules", "house rules.pdf"), "Rules.pdf");
+  const homeId = req.params.homeId;
+  res.download(path.join(rootDir, "rules", "house rules.pdf"), "Rules.pdf");
 
 }
 
 ]
 
+exports.postBookings = [(req, res, next) => {
+  if (!req.session.isLoggedIn) {
+    res.redirect("/login")
+  }
+  next();
+}, (req, res, next) => {
+  let { checkIn, checkOut, guest } = req.body;
+  let homeId = req.params.homeId;
+  let userId = req.user._id;
 
+  const Bookings = new bookings();
+  console.log("!Bookings.userId", !Bookings.userId);
+  // { checkIn, checkOut, guest, homeId, userId }
+  if (Bookings.userId !== userId) {
+    Bookings.checkIn = checkIn;
+    Bookings.checkOut = checkOut;
+    Bookings.guest = guest;
+    Bookings.home = homeId;
+    Bookings.userId = userId;
+    Bookings.save().then(bookingData => {
+      console.log("Home Booked successfully", bookingData);
+    })
+  } else {
+    if (!Bookings.home.includes(homeId)) {
+      Bookings.home.push(homeId);
+      Bookings.save().then(bookingData => {
+        console.log("Home Booked successfully", bookingData);
+      })
+    }
+    else {
+      console.log("Home already Booked");
+    }
+  }
+
+
+
+  res.redirect("/bookings")
+}]

@@ -1,64 +1,90 @@
 <%- include('../partials/head') %>
-<body class="bg-gray-50">
-  <%- include('../partials/nav') %>
-  
-  <main class="container mx-auto px-4 py-8 max-w-7xl">
-    <!-- Header Section -->
-    <div class="text-center mb-8">
-      <h1 class="text-3xl font-bold text-red-600 mb-2">My Bookings</h1>
-      <p class="text-gray-600">Manage your upcoming and past stays</p>
-    </div>
 
-    <!-- Bookings Content -->
-    <div class="max-w-2xl mx-auto">
-      <!-- Empty State -->
-      <div class="text-center py-16">
-        <div class="mb-6">
-          <i class="fas fa-calendar-times text-6xl text-gray-300"></i>
-        </div>
-        <h3 class="text-xl font-medium text-gray-600 mb-2">No bookings yet</h3>
-        <p class="text-gray-500 mb-6">Start your journey by booking your first stay!</p>
-        <a href="/homes" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-flex items-center">
-          <i class="fas fa-search mr-2"></i>
-          Browse Homes
-        </a>
-      </div>
+  <body class="bg-gray-50">
+    <%- include('../partials/nav') %>
 
-      <!-- Future: When bookings exist, they would appear here -->
-      <!-- 
-      <div class="space-y-4">
-        <div class="bg-white rounded-xl shadow-md p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="text-lg font-semibold text-gray-800">Beautiful Beach House</h3>
-              <p class="text-gray-500 text-sm">Malibu, California</p>
-            </div>
-            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-              Confirmed
-            </span>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-            <div>
-              <p class="text-gray-500">Check-in</p>
-              <p class="font-medium">Jan 15, 2024</p>
-            </div>
-            <div>
-              <p class="text-gray-500">Check-out</p>
-              <p class="font-medium">Jan 18, 2024</p>
-            </div>
-            <div>
-              <p class="text-gray-500">Guests</p>
-              <p class="font-medium">2 guests</p>
-            </div>
-            <div>
-              <p class="text-gray-500">Total</p>
-              <p class="font-medium">$12,000</p>
-            </div>
-          </div>
+      <main class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Header Section -->
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-red-600 mb-2">My Bookings</h1>
+          <p class="text-gray-600">Manage your upcoming and past stays</p>
         </div>
-      </div>
-      -->
-    </div>
-  </main>
-</body>
-</html>
+
+        <!-- Bookings Content -->
+        <div class="max-w-2xl mx-auto">
+          <!-- Empty State -->
+          <%= console.log(typeof bookingDetails) %>
+            <% if(!bookingDetails) { %>
+              <div class="text-center py-16">
+                <div class="mb-6">
+                  <i class="fas fa-calendar-times text-6xl text-gray-300"></i>
+                </div>
+                <h3 class="text-xl font-medium text-gray-600 mb-2">No bookings yet</h3>
+                <p class="text-gray-500 mb-6">Start your journey by booking your first stay!</p>
+                <a href="/homes"
+                  class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 inline-flex items-center">
+                  <i class="fas fa-search mr-2"></i>
+                  Browse Homes
+                </a>
+              </div>
+              <% } %>
+
+                <!-- if bookings exist -->
+                <% if(typeof bookingDetails !=='undefine' || typeof bookingDetails !=='null' ) { %>
+                  <% bookingDetails.map(bookingDetail=>{ %>
+                    <div class=" bg-white text-black flex flex-col p-4 shadow-lg rounded-lg  gap-6 mt-6">
+                      <!-- top -->
+                      <div class="flex justify-between items-start  ">
+                        <div class="flex flex-col gap-2">
+                          <span class="text-xl font-semibold">
+                            <%= bookingDetail.home.houseName %>
+                          </span>
+                          <span class="text-gray-500">
+                            <%= bookingDetail.home.location %>
+                          </span>
+                        </div>
+                        <span class="<%= new Date(bookingDetail.checkOut) > new Date()  ? ' text-green-800 bg-green-100' : 'text-red-800 bg-red-100' %> px-2 py-1 rounded-xl">
+                          <%= new Date(bookingDetail.checkOut) > new Date()  ? "Confirmed" : "Expired" %>
+                        </span>
+                      </div>
+
+                      <!-- bottom -->
+                      <div class="grid grid-cols-2 md:grid-cols-4">
+                        <div class="flex flex-col">
+                          <span class="text-gray-500">Check-in</span>
+                          <span class="">
+                            <%= new Date(bookingDetail.checkIn).toLocaleDateString('en-US', { year: "numeric" ,
+                              month: "short" , day: "numeric" }); %>
+                          </span>
+
+                        </div>
+                        <div class="flex flex-col">
+                          <span class="text-gray-500">Check-out</span>
+                          <span class="">
+                            <%= new Date(bookingDetail.checkOut).toLocaleDateString('en-US', { year: "numeric" ,
+                              month: "short" , day: "numeric" }); %>
+                          </span>
+                        </div>
+                        <div class="flex flex-col">
+                          <span class="text-gray-500">Guest</span>
+                          <span class="">
+                            <%= bookingDetail.guest %> guest
+                          </span>
+                        </div>
+                        <div class="flex flex-col">
+                          <span class="text-gray-500">
+                            Total
+                          </span>
+                          <span>$<%= bookingDetail.guest * bookingDetail.home.price %></span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <% }) %>
+                      <% } %>
+        </div>
+      </main>
+  </body>
+
+  </html>
